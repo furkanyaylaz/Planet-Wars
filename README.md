@@ -19,10 +19,6 @@ Planet Wars, tarayıcı tabanlı basit bir oyundur. Oyunun amacı, uzay aracın�
 4. Gezegenlere çarpmadan ve ekranın kenarlarına çarpmadan mümkün olduğunca yüksek bir skor elde etmeye çalışın.
 5. Oyun sona erdiğinde, tarayıcınızı yenileyerek yeniden başlayabilirsiniz.
 
-## Örnek Ekran Görüntüsü
-
-![Planet Wars](screenshot.png)
-
 ## Nasıl Kurulur?
 
 Planet Wars oyununu kurmanız gerekmez, sadece bir tarayıcıda çalıştırmanız yeterlidir.
