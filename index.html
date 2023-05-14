@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Wars</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #game-screen {
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-repeat: repeat-y;
+        }
+
+        #score {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 588px;
+            height: 100vh;
+            background-image: url("Images/uzay.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgb(91, 54, 165);
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-weight: bolder;
+            font-size: 60px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-screen">
+        <canvas id="myCanvas" width="930" height="724"></canvas>
+    </div>
+    <div id="score">
+        SKOR:
+    </div>
+
+
+    <script>
+        let message = "Oyunun amacı gezegenlere ve kenarlara  çarpmadan uzay boşluğunda bulunan altın madenlerini, uzay aracını yön tuşlarıyla hareket ettirerek toplamaktır.\n İpucu: Puan kazanmak için uzay aracını sürekli hareket ettirin"
+        alert(message)
+        let canvas = document.getElementById("myCanvas");
+        let context = canvas.getContext("2d");
+
+        // Arkaplan ve gezegen resimlerini tanımlama
+        let backgroundPosition = 0;
+        let backgroundImage = new Image();
+        backgroundImage.src = "Images/space.jpg";
+
+        let planet1 = new Image();
+        planet1.src = "Images/mars.png";
+
+        let planet2 = new Image();
+        planet2.src = "Images/jupyter.png";
+
+        let planet3 = new Image();
+        planet3.src = "Images/neptune.png";
+
+        let planet4 = new Image();
+        planet4.src = "Images/uranus.png";
+
+        let planet5 = new Image();
+        planet5.src = "Images/earth.png";
+
+        let planet6 = new Image();
+        planet6.src = "Images/gezegen6.png";
+
+        let spaceship = new Image();
+        spaceship.src = "Images/spaceship.jpeg";
+
+        let gold = new Image();
+        gold.src = "Images/gold.png";
+
+        let gold2 = new Image();
+        gold2.src = "Images/gold2.png";
+
+        let gold3 = new Image();
+        gold3.src = "Images/gold3.png";
+
+        let gold4 = new Image();
+        gold4.src = "Images/gold4.png";
+
+        let gold5 = new Image();
+        gold5.src = "Images/gold5.png";
+
+        let gold6 = new Image();
+        gold6.src = "Images/gold6.png";
+
+        let score = 0;
+
+
+        let planetList = [planet1, planet2, gold, gold2, gold3, gold4, gold5, gold6, planet3, planet4, planet5, planet6];
+
+        let planetPositions = [];
+
+        // Rastgele gezegen konumları belirleme
+        for (let i = 0; i < planetList.length; i++) {
+            let xPosition = Math.floor(Math.random() * (canvas.width - 200)) + 100;
+            let yPosition = Math.floor(Math.random() * (canvas.height - 200)) + 100;
+            if (i > 0) {
+                // Yeni gezegen yüksekliğinin önceki gezegenden daha yukarıda olmasını sağlama işlemi
+                yPosition = Math.max(yPosition, planetPositions[i - 1].y + 200);
+            }
+            planetPositions.push({ x: xPosition, y: yPosition });
+        }
+        // Uzay gemisinin başlangıç konumu
+        let spaceshipPosition = { x: 365, y: 590 };
+
+        // Klavyede basılan tuşa göre uzay gemisini hareket ettirme
+        document.addEventListener("keydown", function (event) {
+
+
+            if (event.key === "ArrowLeft") {
+                spaceshipPosition.x -= 15;
+                score += 5;
+                updateScore(score);
+
+            }
+            else if (event.key === "ArrowRight") {
+                spaceshipPosition.x += 15;
+                score += 5;
+                updateScore(score);
+
+            }
+            else if (event.key === "ArrowUp") {
+                spaceshipPosition.y -= 15;
+                score += 5;
+                updateScore(score);
+
+            }
+            else if (event.key === "ArrowDown") {
+                spaceshipPosition.y += 15;
+                score += 5;
+                updateScore(score);
+
+            }
+            // Gezegen ile uzay gemisinin çarpışma kontrolü
+            checkCollision();
+
+        });
+
+
+        function refreshPage() {
+
+            location.reload();
+
+        }
+
+
+        let goldCollected = false; // Değişken, gold gezegenin toplandığını belirtmek için kullanılır
+
+        function checkCollision() {
+            for (let i = 0; i < planetPositions.length; i++) {
+                let planetX = planetPositions[i].x;
+                let planetY = planetPositions[i].y;
+
+                // Uzay gemisinin bir gezegenle çarpışıp çarpışmadığını kontrol etme
+                if (
+                    spaceshipPosition.x < planetX + 100 &&
+                    spaceshipPosition.x + 100 > planetX &&
+                    spaceshipPosition.y < planetY + 100 &&
+                    spaceshipPosition.y + 100 > planetY
+                ) {
+                    if (planetList[i] === gold || planetList[i] === gold2 || planetList[i] === gold3 || planetList[i] === gold4 || planetList[i] === gold5 || planetList[i] === gold6) {
+                        // Toplanan gold resmini ortadan kaldırma
+                        score += 25;
+                        updateScore(score);
+                        planetList.splice(i, 1);
+                        planetPositions.splice(i, 1);
+
+
+                    } else {
+                        alert("Oyun bitti. Gezgene çarptın!");
+                        refreshPage();
+                    }
+                }
+            }
+
+            // Uzay gemisinin kenarlara çarpıp çarpmadığını kontrol etme
+            if (
+                spaceshipPosition.x < 0 ||
+                spaceshipPosition.x + 100 > canvas.width ||
+                spaceshipPosition.y < 0 ||
+                spaceshipPosition.y + 100 > canvas.height
+            ) {
+                alert("Oyun bitti. ");
+                refreshPage();
+
+            }
+        }
+
+
+
+        function generateGold() {
+            if (goldCollected) {
+                // Gold  toplandıysa, yeniden gold oluştur
+                let xPosition = Math.floor(Math.random() * (canvas.width - 200)) + 100;
+                let yPosition = Math.floor(Math.random() * (canvas.height - 200)) + 100;
+                planetList.push(gold);
+                planetPositions.push({ x: xPosition, y: yPosition });
+            }
+        }
+
+        //Kurallara göre toplanan skoru web sayfasında gösterir
+        function updateScore(score) {
+            let scoreElement = document.getElementById("score");
+            scoreElement.textContent = score;
+        }
+
+        function draw() {
+            // Uzay arka planını ve gemiyi çizme
+            context.drawImage(backgroundImage, 0, backgroundPosition, canvas.width, canvas.height);
+            context.drawImage(spaceship, spaceshipPosition.x, spaceshipPosition.y, 150, 150);
+
+            // Gezegenleri çiz
+            for (let i = 0; i < planetList.length; i++) {
+                if (planetList[i] === gold || planetList[i] === gold2 || planetList[i] === gold3 || planetList[i] === gold4 || planetList[i] === gold5 || planetList[i] === gold6) {
+                    context.drawImage(planetList[i], planetPositions[i].x, planetPositions[i].y, 50, 50);
+                }
+                else {
+                    context.drawImage(planetList[i], planetPositions[i].x, planetPositions[i].y, 100, 100);
+                }
+
+                // Gezegenleri  hareket ettirme
+                planetPositions[i].y += i + 1;
+
+                // Gezegenler ekranın altına geldiğinde yeniden konumlandırma
+                if (planetPositions[i].y > canvas.height) {
+                    planetPositions[i].x = Math.floor(Math.random() * (canvas.width - 200)) + 100;
+                    planetPositions[i].y = 0;
+                }
+            }
+
+            // Arka planı hareket ettirme
+            //backgroundPosition += 5;
+            //if (backgroundPosition >= canvas.height) {
+            //    backgroundPosition = 0;
+            //}
+
+            generateGold();
+            updateScore(score);
+
+        }
+
+
+        setInterval(draw, 20);
+    </script>
+</body>
+
+</html>
