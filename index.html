@@ -51,7 +51,7 @@
 
 
     <script>
-        let message = "Oyunun amacı gezegenlere ve kenarlara  çarpmadan uzay boşluğunda bulunan altın madenlerini, uzay aracını yön tuşlarıyla hareket ettirerek toplamaktır.\n İpucu: Puan kazanmak için uzay aracını sürekli hareket ettirin"
+        let message = " Oyuna başladığınızda, uzay aracı orta alanda yer alacaktır. Gezegenler ve altın madenleri rastgele konumlandırılmış olacaktır.\n Uzay aracını hareket ettirmek için klavyedeki yön tuşlarını kullanın.\nUzay aracı gezegenlere çarptığında, oyun biter ve yeniden başlamak için sayfayı yeniden yüklemeniz gerekmektedir.\nUzay aracının ekranın kenarlarına çarpması durumunda da oyun biter.\nAltın madenlerini topladıkça skorunuz artar.\n İpucu: Oyunu sürekli hareket halinde olan uzay aracıyla oynayarak daha fazla puan kazanabilirsiniz."
         alert(message)
         let canvas = document.getElementById("myCanvas");
         let context = canvas.getContext("2d");
@@ -246,10 +246,10 @@
             }
 
             // Arka planı hareket ettirme
-            //backgroundPosition += 5;
-            //if (backgroundPosition >= canvas.height) {
-            //    backgroundPosition = 0;
-            //}
+            backgroundPosition += 5;
+            if (backgroundPosition >= canvas.height) {
+                backgroundPosition = 0;
+            }
 
             generateGold();
             updateScore(score);
